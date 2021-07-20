@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: redmine-db-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Password@9
+      MYSQL_DATABASE: redmine
+    volumes:
+      - redmine-db-data:/var/lib/mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  redmine:
+    image: redmine
+    container_name: redmine-container
+    restart: always
+    ports:
+      - 8080:3000
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_PASSWORD: Password@9
+      REDMINE_SECRET_KEY_BASE: secret
+    depends_on:
+      - db
+
+volumes:
+  redmine-db-data:
